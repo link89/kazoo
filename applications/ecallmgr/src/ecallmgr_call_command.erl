@@ -353,7 +353,7 @@ get_fs_app(_Node, _UUID, JObj, <<"page">>) ->
                                              end, DP, ecallmgr_util:build_simple_channels(Endpoints))
                          end
                         ,fun(DP) ->
-                                 [{"application", <<"conference ", PageId/binary, "@default">>}%
+                                 [{"application", <<"conference ", PageId/binary, "@default">>}
                                   ,{"application", <<"park">>}
                                   |DP
                                  ]
@@ -874,7 +874,11 @@ build_set_args([{ApiHeader, Default, FSHeader}|Headers], JObj, Args) ->
 %%--------------------------------------------------------------------
 get_conf_id_and_profile(JObj) ->
     ConfName = wh_json:get_value(<<"Conference-ID">>, JObj),
-    ProfileName = wh_json:get_value(<<"Profile">>, JObj, <<"default_", ConfName/binary>>),
+    Default = case wh_json:get_integer_value(<<"Max-Participants">>, JObj) of
+                  'undefined' -> <<"default">>;
+                  N -> <<(wh_util:to_binary(N))/binary, "_", ConfName/binary>>
+              end,
+    ProfileName = wh_json:get_value(<<"Profile">>, JObj, Default),
     {ConfName, ProfileName}.
 
 -spec get_conference_app(atom(), ne_binary(), wh_json:object(), boolean()) ->
@@ -954,10 +958,10 @@ get_conference_flags(JObj) ->
             Flags = lists:foldl(fun maybe_add_conference_flag/2, [<<>>], L),
             All = case maybe_add_conference_flag(KV, []) of
                 [] -> tl(Flags);
-                [<<",">> | T] -> T ++ Flags;
-                Fs -> Fs ++ Flags
+                [<<",">> | T] -> [T | Flags];
+                Fs -> [Fs | Flags]
             end,
-            <<"+flags{", (iolist_to_binary(All))/binary, "}">>
+            iolist_to_binary(["+flags{", All, "}"])
     end.
 
 maybe_add_conference_flag({K, V}, Acc) ->

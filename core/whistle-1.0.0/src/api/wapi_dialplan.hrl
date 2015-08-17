@@ -637,6 +637,7 @@
 -define(OPTIONAL_CONFERENCE_REQ_HEADERS, [<<"Insert-At">>
                                           ,<<"Mute">>, <<"Deaf">>, <<"Moderator">>
                                           ,<<"Reinvite">>, <<"Profile">>
+                                          ,<<"Max-Participants">>
 
                                           %% sets joining member to nospeak relations
                                           ,<<"Member-Nospeak">>
