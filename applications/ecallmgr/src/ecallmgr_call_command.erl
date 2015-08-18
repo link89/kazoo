@@ -874,11 +874,8 @@ build_set_args([{ApiHeader, Default, FSHeader}|Headers], JObj, Args) ->
 %%--------------------------------------------------------------------
 get_conf_id_and_profile(JObj) ->
     ConfName = wh_json:get_value(<<"Conference-ID">>, JObj),
-    Default = case wh_json:get_integer_value(<<"Max-Participants">>, JObj) of
-                  'undefined' -> <<"default">>;
-                  N -> <<(wh_util:to_binary(N))/binary, "_", ConfName/binary>>
-              end,
-    ProfileName = wh_json:get_value(<<"Profile">>, JObj, Default),
+    lager:debug(">>> ecc ~s", [wh_json:encode(JObj)]),
+    ProfileName = wh_json:get_ne_value(<<"Profile">>, JObj, <<"default">>),
     {ConfName, ProfileName}.
 
 -spec get_conference_app(atom(), ne_binary(), wh_json:object(), boolean()) ->

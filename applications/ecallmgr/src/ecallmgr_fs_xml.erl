@@ -170,6 +170,8 @@ conference_resp_xml([_|_]=Resp) ->
     CallerControlsEl = caller_controls_xml(CCs),
     ChatPermsEl = chat_permissions_xml(CPs),
     MaxPartsEls = max_participants_xml(MPs),
+    lager:debug(">>> profs ~p", [Ps]),
+    lager:debug(">>> maxparts ~p", [MPs]),
 
     ConfigurationEl = config_el(<<"conference.conf">>, <<"Built by Kazoo">>
                                 ,[AdvertiseEl, ProfilesEl, CallerControlsEl, ChatPermsEl] ++ MaxPartsEls
@@ -214,8 +216,8 @@ profile_xml(Name, Users) ->
     profile_el(Name, UserEls).
 
 max_participants_xml(MaxParts) when is_list(MaxParts) ->
-    max_members_el(props:get_value('max-members', MaxParts))
-        ++ max_members_sound_el(props:get_value('max-members-sound', MaxParts));
+    max_members_el(props:get_integer_value('max-members', MaxParts, 0))
+        ++ max_members_sound_el(props:get_ne_binary_value('max-members-sound', MaxParts));
 max_participants_xml(MaxParts) -> max_participants_xml(wh_json:to_proplist(MaxParts)).
 
 conference_profile_xml(Name, Params) ->
@@ -771,8 +773,8 @@ control_el(Action, Digits, Data) ->
                             ]
                }.
 
--spec max_members_el(api_integer()) -> [xml_el()].
-max_members_el('undefined') -> [];
+-spec max_members_el(non_neg_integer()) -> [xml_el()].
+max_members_el(0) -> [];
 max_members_el(MaxParticipants) ->
     [#xmlElement{name='max-members'
                  ,content=MaxParticipants

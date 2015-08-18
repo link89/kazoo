@@ -320,7 +320,7 @@
 -define(CONFERENCE_ERROR_TYPES, []).
 
 -define(CONFIG_REQ_HEADERS, [<<"Profile">>]).
--define(OPTIONAL_CONFIG_REQ_HEADERS, [<<"Max-Participants">>]).
+-define(OPTIONAL_CONFIG_REQ_HEADERS, []).
 -define(CONFIG_REQ_VALUES, [{<<"Event-Category">>, <<"conference">>}
                             ,{<<"Event-Name">>, <<"config_req">>}
                            ]).

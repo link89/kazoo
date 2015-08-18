@@ -1891,16 +1891,14 @@ wait_for_say(Call) ->
 -spec conference(ne_binary(), boolean(), boolean(), whapps_call:call()) -> 'ok'.
 -spec conference(ne_binary(), boolean(), boolean(), boolean(), whapps_call:call()) -> 'ok'.
 -spec conference(ne_binary(), boolean(), boolean(), boolean(), ne_binary(), whapps_call:call()) -> 'ok'.
--spec conference(ne_binary(), boolean(), boolean(), boolean(), ne_binary(), non_neg_integer(), whapps_call:call()) -> 'ok'.
--spec conference(ne_binary(), boolean(), boolean(), boolean(), ne_binary(), non_neg_integer(), boolean(), whapps_call:call()) -> 'ok'.
+-spec conference(ne_binary(), boolean(), boolean(), boolean(), ne_binary(), boolean(), whapps_call:call()) -> 'ok'.
 
 -spec b_conference(ne_binary(), whapps_call:call()) -> whapps_api_std_return().
 -spec b_conference(ne_binary(), boolean(), whapps_call:call()) -> whapps_api_std_return().
 -spec b_conference(ne_binary(), boolean(), boolean(), whapps_call:call()) -> whapps_api_std_return().
 -spec b_conference(ne_binary(), boolean(), boolean(), boolean(), whapps_call:call()) -> whapps_api_std_return().
 -spec b_conference(ne_binary(), boolean(), boolean(), boolean(), ne_binary(), whapps_call:call()) -> whapps_api_std_return().
--spec b_conference(ne_binary(), boolean(), boolean(), boolean(), ne_binary(), non_neg_integer(), whapps_call:call()) -> whapps_api_std_return().
--spec b_conference(ne_binary(), boolean(), boolean(), boolean(), ne_binary(), non_neg_integer(), boolean(), whapps_call:call()) -> whapps_api_std_return().
+-spec b_conference(ne_binary(), boolean(), boolean(), boolean(), ne_binary(), boolean(), whapps_call:call()) -> whapps_api_std_return().
 
 conference(ConfId, Call) ->
     conference(ConfId, 'false', Call).
@@ -1909,21 +1907,19 @@ conference(ConfId, Mute, Call) ->
 conference(ConfId, Mute, Deaf, Call) ->
     conference(ConfId, Mute, Deaf, 'false', Call).
 conference(ConfId, Mute, Deaf, Moderator, Call) ->
-    conference(ConfId, Mute, Deaf, Moderator, <<"default">>, Call).
+    conference(ConfId, Mute, Deaf, Moderator, <<"undefined">>, Call).
 conference(ConfId, Mute, Deaf, Moderator, ProfileName, Call) ->
-    conference(ConfId, Mute, Deaf, Moderator, ProfileName, 0, Call).
-conference(ConfId, Mute, Deaf, Moderator, ProfileName, MaxParticipants, Call) ->
-    conference(ConfId, Mute, Deaf, Moderator, ProfileName, MaxParticipants, 'false', Call).
-conference(ConfId, Mute, Deaf, Moderator, ProfileName, MaxParticipants, Reinvite, Call) ->
+    conference(ConfId, Mute, Deaf, Moderator, ProfileName, 'false', Call).
+conference(ConfId, Mute, Deaf, Moderator, ProfileName, Reinvite, Call) ->
     Command = [{<<"Application-Name">>, <<"conference">>}
                ,{<<"Conference-ID">>, ConfId}
                ,{<<"Mute">>, Mute}
                ,{<<"Deaf">>, Deaf}
                ,{<<"Moderator">>, Moderator}
                ,{<<"Profile">>, ProfileName}
-               ,{<<"Max-Participants">>, MaxParticipants}
                ,{<<"Reinvite">>, Reinvite}
               ],
+    lager:debug(">>> ~s", [wh_json:encode({Command})]),
     send_command(Command, Call).
 
 b_conference(ConfId, Call) ->
@@ -1935,11 +1931,9 @@ b_conference(ConfId, Mute, Deaf, Call) ->
 b_conference(ConfId, Mute, Deaf, Moderator, Call) ->
     b_conference(ConfId, Mute, Deaf, Moderator, <<"default">>, Call).
 b_conference(ConfId, Mute, Deaf, Moderator, Profile, Call) ->
-    b_conference(ConfId, Mute, Deaf, Moderator, Profile, 0, Call).
-b_conference(ConfId, Mute, Deaf, Moderator, Profile, MaxParticipants, Call) ->
-    b_conference(ConfId, Mute, Deaf, Moderator, Profile, MaxParticipants, 'false', Call).
-b_conference(ConfId, Mute, Deaf, Moderator, Profile, MaxParticipants, Reinvite, Call) ->
-    conference(ConfId, Mute, Deaf, Moderator, Profile, MaxParticipants, Reinvite, Call),
+    b_conference(ConfId, Mute, Deaf, Moderator, Profile, 'false', Call).
+b_conference(ConfId, Mute, Deaf, Moderator, Profile, Reinvite, Call) ->
+    conference(ConfId, Mute, Deaf, Moderator, Profile, Reinvite, Call),
     wait_for_message(Call, <<"conference">>, <<"CHANNEL_EXECUTE">>).
 
 %%--------------------------------------------------------------------

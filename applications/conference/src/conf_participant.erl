@@ -629,8 +629,7 @@ send_conference_command(Conference, Call) ->
                                    ,Mute
                                    ,Deaf
                                    ,whapps_conference:moderator(Conference)
-                                   ,whapps_conference:profile(Conference)
-                                   ,whapps_conference:max_participants(Conference)
+                                   ,whapps_conference:id(Conference)
                                    ,Call
                                   ).
 

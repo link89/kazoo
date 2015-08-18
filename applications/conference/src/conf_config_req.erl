@@ -14,23 +14,26 @@
 -spec handle_req(wh_json:object(), wh_proplist()) -> 'ok'.
 handle_req(JObj, _Options) ->
     'true' = wapi_conference:config_req_v(JObj),
-    ConfigName = wh_json:get_value(<<"Profile">>, JObj),
+    ConfigName = wh_json:get_ne_value(<<"Profile">>, JObj, <<"default">>),
+    lager:debug(">>> cfgnm ~p", [ConfigName]),
     fetch_config(JObj, ConfigName).
 
 -spec fetch_config(wh_json:object(), ne_binary()) -> 'ok'.
 -spec fetch_config(wh_json:object(), ne_binary(), api_binary()) -> 'ok'.
-fetch_config(JObj, <<"default">> = ConfigName) ->
-    Config = whapps_config:get(?CONFIG_CAT
+fetch_config(_JObj, <<"default">> = ConfigName) ->
+    _Config = whapps_config:get(?CONFIG_CAT
                                ,[<<"profiles">>, ConfigName]
                                ,wh_json:from_list(?DEFAULT_PROFILE_CONFIG)
                               ),
-    fetch_config(JObj, ConfigName, Config);
+    %% fetch_config(JObj, ConfigName, Config);
+    lager:debug(">>> caught default!");
 fetch_config(JObj, ConfigName) ->
     Config = whapps_config:get(?CONFIG_CAT, [<<"profiles">>, ConfigName]),
     fetch_config(JObj, ConfigName, Config).
 
 fetch_config(_JObj, _ConfigName, 'undefined') ->
-    lager:debug("no profile defined for ~s", [_ConfigName]);
+    lager:debug("no profile defined for ~s", [_ConfigName]),
+    fetch_config(_JObj, _ConfigName, []);
 fetch_config(JObj, ConfigName, Profile) ->
     lager:debug("profile '~s' found", [ConfigName]),
     Resp = [{<<"Profiles">>, wh_json:from_list([{ConfigName, Profile}])}
@@ -41,6 +44,7 @@ fetch_config(JObj, ConfigName, Profile) ->
             ,{<<"Msg-ID">>, wh_json:get_value(<<"Msg-ID">>, JObj)}
             | wh_api:default_headers(?APP_NAME, ?APP_VERSION)
            ],
+    lager:debug(">>> config ~p", [Resp]),
     try wapi_conference:publish_config_resp(wh_json:get_value(<<"Server-ID">>, JObj)
                                             ,props:filter_undefined(Resp)
                                            )
