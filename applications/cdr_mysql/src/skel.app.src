@@ -1,9 +1,9 @@
-{application, skel,
+{application, cdr_mysql,
  [
-  {description, "Skel - A skeleton application useful for quickly creating services"},
+  {description, "CDR MySQL - A cdr_mysqleton application useful for quickly creating services"},
   {vsn, "4.0.0"},
   {modules, []},
-  {registered, [skel_sup]},
+  {registered, [cdr_mysql_sup]},
   {applications, [ kernel
                  , stdlib
                  , crypto
@@ -14,5 +14,5 @@
 
                  , lager
                  ]},
-  {mod, {skel_app, []}}
+  {mod, {cdr_mysql_app, []}}
  ]}.

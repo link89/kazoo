@@ -5,20 +5,20 @@
 %%% @end
 %%% @contributors
 %%%-------------------------------------------------------------------
--module(skel_sup).
+-module(cdr_mysql_sup).
 
 -behaviour(supervisor).
 
 -export([start_link/0]).
 -export([init/1]).
 
--include("skel.hrl").
+-include("cdr_mysql.hrl").
 
 -define(SERVER, ?MODULE).
 
 %% Helper macro for declaring children of supervisor
--define(CHILDREN, [?CACHE('skel_cache')
-                   ,?WORKER('skel_listener')
+-define(CHILDREN, [?CACHE('cdr_mysql_cache')
+                   ,?WORKER('cdr_mysql_listener')
                   ]).
 
 %% ===================================================================

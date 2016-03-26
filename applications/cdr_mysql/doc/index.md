@@ -1,12 +1,12 @@
 /*
-Section: Skel
-Title: Skel
+Section: CDR MySQL
+Title: CDR MySQL
 Language: en-US
 */
 
 # Overview
 
-The Skel application serves as the barest of examples of creating a listener on the AMQP message bus, handling the JSON requests that come in, and responding with JSON as appropriate.
+The CDR MySQL application serves as the barest of examples of creating a listener on the AMQP message bus, handling the JSON requests that come in, and responding with JSON as appropriate.
 
 The example listener is for route requests, but the reader should know that several other requests exist, not limited to authentication, authorization, and other whapp-specific requests.
 
@@ -53,16 +53,16 @@ Some of the wapi modules allow parameters to be passed in the second element of 
 
 Now that we've bound to all appropriate AMQP messages we want to consume, we need to tell the gen\_listener behaviour what to do with them when received. To do this, we pass in a list of responder module/function pairs and a list of event category and name pairs.
 
-In the case of binding to route requests, we know to expect to receive events with ("dialplan", "route\_req") as the category/name. So we create a responder module skel\_route\_req.erl and define a handle\_req/2 function. In the start\_link parameters, we would inform gen\_listener of this like so:
+In the case of binding to route requests, we know to expect to receive events with ("dialplan", "route\_req") as the category/name. So we create a responder module cdr_mysql\_route\_req.erl and define a handle\_req/2 function. In the start\_link parameters, we would inform gen\_listener of this like so:
 
 
-    {responders, [{{skel_route_req, handle_req}, [{<<"dialplan">>, <<"route_req">>}]}]}.
+    {responders, [{{cdr_mysql_route_req, handle_req}, [{<<"dialplan">>, <<"route_req">>}]}]}.
 
-As you can see, the same callback can take more than one category/name pair. One could also create one callback module (skel\_handlers, for instance) with a handle\_\* function specific to each type of category/name pair.
+As you can see, the same callback can take more than one category/name pair. One could also create one callback module (cdr_mysql\_handlers, for instance) with a handle\_\* function specific to each type of category/name pair.
 
 If you want to handle more than one type of name for a given category, you can use the <<"\*">> to match any catgeory or name. So, if we expect multiple event names for the dialplan category, and we want to use the same handler for each, we could denote that like:
 
-    {responders, [{{skel_handlers, handle_dialplan_req}, [{<<"dialplan">>, <<"*">>}]}]}
+    {responders, [{{cdr_mysql_handlers, handle_dialplan_req}, [{<<"dialplan">>, <<"*">>}]}]}
 
 #### The rest
 

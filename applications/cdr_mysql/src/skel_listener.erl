@@ -5,7 +5,7 @@
 %%% @end
 %%% @contributors
 %%%-------------------------------------------------------------------
--module(skel_listener).
+-module(cdr_mysql_listener).
 
 -behaviour(gen_listener).
 
@@ -19,7 +19,7 @@
          ,code_change/3
         ]).
 
--include("skel.hrl").
+-include("cdr_mysql.hrl").
 
 -define(SERVER, ?MODULE).
 
@@ -31,11 +31,11 @@
                   ]).
 -define(RESPONDERS, [
                      %% Received because of our route binding
-                     {{'skel_handlers', 'handle_route_req'}, [{<<"dialplan">>, <<"route_req">>}]}
+                     {{'cdr_mysql_handlers', 'handle_route_req'}, [{<<"dialplan">>, <<"route_req">>}]}
 
                      %% Received because of our self binding (route_wins are sent to the route_resp's Server-ID
                      %% which is usually populated with the listener's queue name
-                     ,{{'skel_handlers', 'handle_route_win'}, [{<<"dialplan">>, <<"route_win">>}]}
+                     ,{{'cdr_mysql_handlers', 'handle_route_win'}, [{<<"dialplan">>, <<"route_win">>}]}
                     ]).
 -define(QUEUE_NAME, <<>>).
 -define(QUEUE_OPTIONS, []).

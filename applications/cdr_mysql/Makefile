@@ -1,5 +1,5 @@
 ROOT = ../..
-PROJECT = skel
+PROJECT = cdr_mysql
 
 all: compile
 

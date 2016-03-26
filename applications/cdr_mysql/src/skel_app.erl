@@ -5,7 +5,7 @@
 %%% @end
 %%% @contributors
 %%%-------------------------------------------------------------------
--module(skel_app).
+-module(cdr_mysql_app).
 
 -behaviour(application).
 
@@ -20,7 +20,7 @@
 -spec start(application:start_type(), any()) -> startapp_ret().
 start(_Type, _Args) ->
     _ = declare_exchanges(),
-    skel_sup:start_link().
+    cdr_mysql_sup:start_link().
 
 %%--------------------------------------------------------------------
 %% @public

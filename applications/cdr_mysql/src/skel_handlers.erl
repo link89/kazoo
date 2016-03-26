@@ -6,13 +6,13 @@
 %%% @contributors
 %%%   James Aimonetti
 %%%-------------------------------------------------------------------
--module(skel_handlers).
+-module(cdr_mysql_handlers).
 
 -export([handle_route_req/2
          ,handle_route_win/2
         ]).
 
--include("skel.hrl").
+-include("cdr_mysql.hrl").
 
 -spec handle_route_req(wh_json:object(), wh_proplist()) -> any().
 handle_route_req(JObj, Props) ->

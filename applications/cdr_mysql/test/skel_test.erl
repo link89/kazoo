@@ -5,6 +5,6 @@
 %%% @end
 %%% @contributors
 %%%-------------------------------------------------------------------
--module(skel_test).
+-module(cdr_mysql_test).
 
 -include_lib("eunit/include/eunit.hrl").
