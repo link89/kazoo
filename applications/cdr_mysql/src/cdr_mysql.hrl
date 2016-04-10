@@ -6,5 +6,7 @@
 -define(APP_NAME, <<"cdr_mysql">>).
 -define(APP_VERSION, <<"4.0.0">> ).
 
+-define(CDR_MYSQL_CFG, ?APP_NAME).
+
 -define(CDR_MYSQL_HRL, 'true').
 -endif.
